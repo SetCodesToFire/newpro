@@ -7,9 +7,6 @@ const bodyParser = require('body-parser');
 
 const config     = require('./models/config');
 
-const users      = require('./controllers/users');
-const items      = require('./controllers/items');
-const auth       = require('./controllers/auth');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.dbUrl, {server: {socketOptions: {keepAlive: 120}}});
