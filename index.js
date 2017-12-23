@@ -5,6 +5,7 @@ const favicon    = require('serve-favicon');
 const logger     = require('morgan');
 const bodyParser = require('body-parser');
 
+const Link       = require('./models/Schema/link');
 const config     = require('./models/config');
 
 
@@ -12,27 +13,22 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.dbUrl, {server: {socketOptions: {keepAlive: 120}}});
 
 var app = express();
-var router = express.Router();
 
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
-router.param('id', (req, res, next, id) => {
-    if (!id.match(/^[0-9a-fA-F]{24}$/))
-        return res.status(400).send('Invalid ID');
-    next();
-});
-
 //Routers
 
-
+app.get('/links',function (req, res, next) {
+  Link.findOne({ 'userid': req.body.userid },function (err,data) {
+    if(err){return next(err);}
+    res.json(data.link);
+  });
+});
 
 //
-
-
-app.use('/', router);
 
 app.use((err, req, res, next) => {
     var status = err.status || 500;
